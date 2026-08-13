@@ -162,7 +162,11 @@
     background:radial-gradient(circle at 32% 28%, #ffe9b0, var(--gold) 35%, var(--orange) 75%, var(--orange-dark) 100%);
     border:2px solid rgba(255,255,255,.35);
   }
-  .person-name{font-weight:700;font-size:15px;flex:1;}
+  .person-name-wrap{flex:1;cursor:pointer;min-width:0;}
+  .person-name{font-weight:700;font-size:15px;}
+  .person-name .tap-hint{margin-top:1px;}
+  .person-badges{display:flex;flex-direction:column;align-items:flex-end;gap:6px;cursor:pointer;flex-shrink:0;}
+  .badge-row{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end;}
   .acct-count{
     font-size:10.5px;color:var(--muted);font-family:'JetBrains Mono',monospace;
     background:var(--bg-1);border:1px solid var(--line);border-radius:20px;padding:3px 9px;
@@ -194,8 +198,8 @@
   }
   .switch input:checked + .switch-track{background:linear-gradient(120deg,var(--orange),var(--orange-2));border-color:var(--orange);}
   .switch input:checked + .switch-track .switch-thumb{transform:translateX(18px);background:#fff;}
-  .filter-body-wrap{display:grid;grid-template-rows:1fr;transition:opacity .2s;}
-  .filter-body-wrap.disabled{opacity:.4;pointer-events:none;}
+  .filter-body-wrap{display:grid;grid-template-rows:0fr;transition:grid-template-rows .25s ease;}
+  .filter-body-wrap.open{grid-template-rows:1fr;}
   .filter-body-inner{overflow:hidden;}
   .filter-body-inner > *{padding-left:16px;padding-right:16px;}
   .filter-body-inner > .filter-group:first-child{padding-top:2px;}
@@ -217,6 +221,9 @@
     font-size:11px;color:var(--muted);background:none;border:none;
     text-decoration:underline;cursor:pointer;margin-top:6px;padding:0;
   }
+  .accounts-wrap{display:grid;grid-template-rows:0fr;transition:grid-template-rows .25s ease;}
+  .person.accounts-open .accounts-wrap{grid-template-rows:1fr;}
+  .accounts-inner{overflow:hidden;}
   .accounts{display:flex;flex-direction:column;}
   .acct{padding:12px 14px;border-top:1px dashed var(--line-soft);cursor:pointer;transition:background .15s;}
   .acct:first-child{border-top:none;}
@@ -343,7 +350,7 @@
           <span class="switch-track"><span class="switch-thumb"></span></span>
         </label>
       </div>
-      <div class="filter-body-wrap open" id="filterBodyWrap"><div class="filter-body-inner">
+      <div class="filter-body-wrap" id="filterBodyWrap"><div class="filter-body-inner">
       <div class="filter-group">
         <div class="filter-label">プレイする神殿クエスト</div>
         <div class="filter-radio" data-filter-group="temple">
@@ -411,7 +418,7 @@ const MEMBERS = [
     { accountName: "ススム④", rank: "512",  gameId: "931146110012", closed: true },
     { accountName: "ススム",   rank: "729",  gameId: "789032942560", closed: true },
   ]},
-  { lineName: "かれん", activeTime: "24時間", accounts: [
+  { lineName: "かれん", accounts: [
     { accountName: "ビックマムの妹かれん", rank: "1020", gameId: "754405776830" },
   ]},
   { lineName: "リクちゃん", accounts: [
@@ -438,7 +445,7 @@ const MEMBERS = [
     { accountName: "SUGURU①", rank: "1897", gameId: "845504854" },
     { accountName: "SUGURU②", rank: "139",  gameId: "163414791951" },
   ]},
-  { lineName: "YUUKI", accounts: [
+  { lineName: "YUUKI", note: "神殿:なんでもOK\nランク差:325以上\n垢:1垢でもOK\n番号:777のみ\n厳選キャラ:OK\nワンパンキャラなくても大丈夫\n【追記】1垢以上325差あれば他の垢は複数の日にわけて貯める等でも大丈夫です\nこちら闇時2用喜多ちゃんのみ出せます\n基本的に21~24時ごろに貯められる方いましたらお願いいたします", accounts: [
     { accountName: "Y・I", rank: "690", gameId: "722096972443" },
   ]},
   { lineName: "あきひろ", accounts: [
@@ -462,7 +469,7 @@ const MEMBERS = [
   { lineName: "ヒロ", accounts: [
     { accountName: "HIRO", rank: "51", gameId: "191292994635" },
   ]},
-  { lineName: "ゆりな", accounts: [
+  { lineName: "ゆりな", note: "神殿:なんでもOK\nランク差:175以上\n垢:1垢でもOK\n番号:番号無しでもOK\n厳選キャラ:NG\nワンパンキャラのみ", accounts: [
     { accountName: "トンちゃん@ゆりなガチャ禁", rank: "596", gameId: "87457461458" },
     { accountName: "トンちゃん@ゆりな", rank: "709", gameId: "256947852" },
     { accountName: "伽羅栖ʚ✞ɞヤマピー", rank: "2041", gameId: "910812272" },
@@ -481,7 +488,7 @@ const MEMBERS = [
     { accountName: "らすかる6", rank: "654",  gameId: "526778761709" },
     { accountName: "らすかる7", rank: "44",   gameId: "74061724801" },
   ]},
-  { lineName: "くりりん", accounts: [
+  { lineName: "くりりん", note: "神殿:闇時2のみ\nランク差:気にしない\n垢:1垢でもOK\n番号:777のみ\n厳選キャラ:OK\nワンパンキャラなくても大丈夫\n【追記】8垢ALL2神殿ずつでお願いします🤲", accounts: [
     { accountName: "くりお",             rank: "2500", gameId: "729486775" },
     { accountName: "★くりお★Ⅱ2ndⅡ",  rank: "2007", gameId: "501157016272" },
     { accountName: "@くりお@Ⅱ3rdⅡ",   rank: "2008", gameId: "955155833104" },
@@ -622,15 +629,24 @@ resultsEl.innerHTML = list.map((person, pi) => {
     <div class="person" data-pidx="${pi}">
       <div class="person-head">
         <div class="avatar">${escapeHtml(initial(person.lineName))}</div>
-        <div class="person-name">${escapeHtml(person.lineName)}</div>
-        <div class="acct-count">${person.accounts.length}垢</div>
-        ${person.activeTime ? `<div class="time-badge">⏰ ${escapeHtml(person.activeTime)}</div>` : ''}
-        ${rankDiff ? `<div class="time-badge rankdiff-badge">📏 ${escapeHtml(rankDiff)}以上</div>` : ''}
-        <button class="memo-btn${person.note?' has-note':''}" data-memo-toggle="${pi}">募集条件${(person.note && person.note.includes('【追記】'))?'(追記あり)':''}</button>
+        <div class="person-name-wrap" data-acct-toggle="${pi}">
+          <div class="person-name">${escapeHtml(person.lineName)}</div>
+          <div class="tap-hint">タップして表示</div>
+        </div>
+        <div class="person-badges" data-memo-toggle="${pi}">
+          <div class="badge-row">
+            <div class="acct-count">${person.accounts.length}垢</div>
+            ${rankDiff ? `<div class="time-badge rankdiff-badge">ランク差${escapeHtml(rankDiff)}以上</div>` : ''}
+          </div>
+          <div class="badge-row">
+            <button class="memo-btn${person.note?' has-note':''}">募集条件${(person.note && person.note.includes('【追記】'))?'(追記あり)':''}</button>
+          </div>
+        </div>
       </div>
       <div class="memo-wrap"><div class="memo-inner">
         <div class="memo-body${person.note?'':' empty'}">${person.note ? escapeHtml(person.note) : 'メモは登録されていません。'}</div>
       </div></div>
+      <div class="accounts-wrap"><div class="accounts-inner">
       <div class="accounts">
         ${person.accounts.map((a, ai) => `
           <div class="acct${a.closed?' closed':''}" data-idx="${pi}_${ai}" data-closed="${a.closed?'1':'0'}">
@@ -654,17 +670,25 @@ resultsEl.innerHTML = list.map((person, pi) => {
           </div>
         `).join('')}
       </div>
+      </div></div>
     </div>
   `;
   }).join('');
 }
 
 resultsEl.addEventListener('click', async (e)=>{
-  const memoBtn = e.target.closest('.memo-btn');
-  if(memoBtn){
+  const badgesWrap = e.target.closest('.person-badges');
+  if(badgesWrap){
     e.stopPropagation();
-    const personEl = memoBtn.closest('.person');
+    const personEl = badgesWrap.closest('.person');
     personEl.classList.toggle('memo-open');
+    return;
+  }
+  const nameWrap = e.target.closest('.person-name-wrap');
+  if(nameWrap){
+    e.stopPropagation();
+    const personEl = nameWrap.closest('.person');
+    personEl.classList.toggle('accounts-open');
     return;
   }
   const copyBtn = e.target.closest('.copy-btn');
@@ -718,15 +742,15 @@ document.getElementById('filterReset').addEventListener('click', () => {
   render();
 });
 
-// ==== あなたの情報:ON/OFFスイッチ(OFFなら全件表示) ====
+// ==== あなたの情報:ON/OFFスイッチ(OFFなら全件表示・折りたたむ) ====
 const filterMasterSwitch = document.getElementById('filterMasterSwitch');
 const filterBodyWrap = document.getElementById('filterBodyWrap');
 filterMasterSwitch.addEventListener('change', () => {
   filterEnabled = filterMasterSwitch.checked;
-  filterBodyWrap.classList.toggle('disabled', !filterEnabled);
+  filterBodyWrap.classList.toggle('open', filterEnabled);
   render();
 });
-filterBodyWrap.classList.toggle('disabled', !filterEnabled);
+filterBodyWrap.classList.toggle('open', filterEnabled);
 
 hudCount.textContent = `${MEMBERS.length}人登録`;
 render();
