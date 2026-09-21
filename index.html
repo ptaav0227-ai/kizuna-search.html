@@ -242,6 +242,18 @@
     padding:2px 8px;border-radius:20px;margin-top:4px;
   }
   .closed-badge::before{content:"";width:5px;height:5px;border-radius:50%;background:#e2574c;}
+  .status-badge{
+    display:inline-flex;align-items:center;gap:5px;
+    font-size:10px;font-weight:700;padding:3px 8px;border-radius:999px;
+    margin-top:4px;letter-spacing:.02em;
+  }
+  .status-badge::before{content:"";width:6px;height:6px;border-radius:50%;}
+  .status-badge.updated{background:rgba(46,158,91,.15);color:#4fd587;}
+  .status-badge.updated::before{background:#4fd587;}
+  .status-badge.unknown{background:rgba(201,138,31,.15);color:#e0a83f;}
+  .status-badge.unknown::before{background:#e0a83f;}
+  .status-badge.unsure{background:rgba(138,143,152,.18);color:#aab0ba;}
+  .status-badge.unsure::before{background:#aab0ba;}
   .acct-top{display:flex;align-items:center;justify-content:space-between;gap:10px;}
   .acct-name{font-weight:600;font-size:14px;}
   .tap-hint{font-size:10.5px;color:var(--muted);margin-top:2px;}
@@ -351,7 +363,7 @@
   <div class="wrap">
     <div class="update-banner" id="updateBanner">
       <span class="update-icon">🔔</span>
-      <span class="update-text"><strong>条件変更のお知らせ:</strong> <span id="updateNames"></span> の募集条件が更新されました</span>
+      <span class="update-text" id="updateText"></span>
     </div>
 
     <div class="search-card">
@@ -427,136 +439,132 @@
 /* ============ データはここを書き換えて差し替え ============ */
 const MEMBERS = [
   { lineName: "藤岡", note: "神殿:なんでもOK\nランク差:175以上\n垢:1垢でもOK\n番号:番号無しでもOK\n厳選キャラ:NG\nワンパンキャラのみ", accounts: [
-    { accountName: "私はルリ",       rank: "2500", gameId: "131291013582" },
-    { accountName: "私はルリ②",     rank: "2005", gameId: "168606364132" },
-    { accountName: "私はルリ③",     rank: "1293", gameId: "601468556" },
-    { accountName: "私はルリ4号線", rank: "861",  gameId: "716483347041", closed: true },
+    { accountName: "私はルリ", rank: "2500", gameId: "131291013582", rankStatus: "updated" },
+    { accountName: "私はルリ②", rank: "2007", gameId: "168606364132", rankStatus: "updated" },
+    { accountName: "私はルリ③", rank: "1504", gameId: "601468556", rankStatus: "updated" },
+    { accountName: "私はルリ4号線", rank: "940", gameId: "716483347041", closed: true, rankStatus: "updated" },
   ]},
   { lineName: "すぅちゃん", note: "神殿:なんでもOK\nランク差:325以上\n垢:1垢でもOK\n番号:番号無しでもOK\n厳選キャラ:OK\nワンパンキャラなくても大丈夫\n【追記】基本火の1貼るのでよろしくお願いします！", accounts: [
-    { accountName: "ススム①", rank: "2500", gameId: "515783919" },
-    { accountName: "ススム②", rank: "1043", gameId: "833959189716" },
-    { accountName: "ススム④", rank: "512",  gameId: "931146110012", closed: true },
-    { accountName: "ススム",   rank: "729",  gameId: "789032942560", closed: true },
+    { accountName: "ススム①", rank: "2500", gameId: "515783919", rankStatus: "updated" },
+    { accountName: "ススム②", rank: "1049", gameId: "833959189716", rankStatus: "updated" },
+    { accountName: "ススム④", rank: "512", gameId: "931146110012", closed: true, rankStatus: "updated" },
+    { accountName: "ススム", rank: "731", gameId: "789032942560", closed: true, rankStatus: "updated" },
   ]},
   { lineName: "かれん", accounts: [
-    { accountName: "ビックマムの妹かれん", rank: "1020", gameId: "754405776830" },
+    { accountName: "ビックマムの妹かれん", rank: "1500", gameId: "754405776830", rankStatus: "updated" },
   ]},
   { lineName: "田中", accounts: [
-    { accountName: "S",    rank: "2259", gameId: "866595039852", closed: true },
-    { accountName: "Ss",   rank: "1228", gameId: "167989412548", closed: true },
-    { accountName: "Ssss", rank: "934",  gameId: "862736414101" },
-    { accountName: "Sss",  rank: "930",  gameId: "896785504970" },
+    { accountName: "S", rank: "2281", gameId: "866595039852", closed: true, rankStatus: "updated" },
+    { accountName: "Ss", rank: "1243", gameId: "167989412548", closed: true, rankStatus: "updated" },
+    { accountName: "Ssss", rank: "1056", gameId: "862736414101", rankStatus: "updated" },
+    { accountName: "Sss", rank: "1064", gameId: "896785504970", rankStatus: "updated" },
   ]},
   { lineName: "莉奈", note: "神殿:なんでもOK\nランク差:100以上\n垢:1垢でもOK\n番号:番号無しでもOK\n厳選キャラ:OK\nワンパンキャラなくても大丈夫\n【追記】メインと325差、サブ2日(4回)に分けて貯まる垢ならOKです!", accounts: [
-    { accountName: "ぱぴもっちo'ㅅ'o",   rank: "1368", gameId: "400361501664" },
-    { accountName: "サブもっち①o'ㅅ'o", rank: "797",  gameId: "221837494456" },
+    { accountName: "ぱぴもっちo'ㅅ'o", rank: "1419", gameId: "400361501664", rankStatus: "updated" },
+    { accountName: "サブもっち①o'ㅅ'o", rank: "802", gameId: "221837494456", rankStatus: "updated" },
   ]},
   { lineName: "SUGURU(番号なし)", note: "神殿:なんでもOK\nランク差:325以上\n垢:1垢でもOK\n番号:番号無しでもOK\n厳選キャラ:OK\nワンパンキャラのみ\n【追記】自分は番号無しです。", accounts: [
-    { accountName: "SUGURU①", rank: "1897", gameId: "845504854" },
-    { accountName: "SUGURU②", rank: "139",  gameId: "163414791951" },
+    { accountName: "SUGURU①", rank: "2006", gameId: "845504854", rankStatus: "updated" },
+    { accountName: "SUGURU②", rank: "139", gameId: "163414791951", rankStatus: "updated" },
   ]},
   { lineName: "YUUKI", note: "神殿:なんでもOK\nランク差:325以上\n垢:1垢でもOK\n番号:777のみ\n厳選キャラ:OK\nワンパンキャラなくても大丈夫\n【追記】1垢以上325差あれば他の垢は複数の日にわけて貯める等でも大丈夫です\nこちら闇時2用喜多ちゃんのみ出せます\n基本的に21~24時ごろに貯められる方いましたらお願いいたします", accounts: [
-    { accountName: "Y・I", rank: "690", gameId: "722096972443" },
+    { accountName: "Y・I", rank: "692", gameId: "722096972443", rankStatus: "updated" },
   ]},
   { lineName: "あきひろ", accounts: [
-    { accountName: "2×4", rank: "523", gameId: "167017160" },
+    { accountName: "2×4", rank: "571", gameId: "167017160", rankStatus: "updated" },
   ]},
   { lineName: "コウヘイ", accounts: [
-    { accountName: "Kohei。", rank: "2063", gameId: "416959932074" },
+    { accountName: "Kohei。", rank: "2087", gameId: "416959932074", rankStatus: "updated" },
   ]},
   { lineName: "なめ猫", accounts: [
-    { accountName: "なめ猫", rank: "1129", gameId: "087598666" },
-    { accountName: "なめ猫①", rank: "537", gameId: "087013943" },
-    { accountName: "なめ猫＊まりこ", rank: "474", gameId: "856640562515" },
+    { accountName: "なめ猫", rank: "1131", gameId: "087598666", rankStatus: "updated" },
+    { accountName: "なめ猫①", rank: "537", gameId: "087013943", rankStatus: "updated" },
+    { accountName: "なめ猫＊まりこ", rank: "474", gameId: "856640562515", rankStatus: "updated" },
   ]},
   { lineName: "ゆりな", note: "神殿:なんでもOK\nランク差:175以上\n垢:1垢でもOK\n番号:番号無しでもOK\n厳選キャラ:NG\nワンパンキャラのみ", accounts: [
-    { accountName: "トンちゃん@ゆりなガチャ禁", rank: "596", gameId: "87457461458" },
-    { accountName: "トンちゃん@ゆりな", rank: "709", gameId: "256947852" },
-    { accountName: "伽羅栖ʚ✞ɞヤマピー", rank: "2041", gameId: "910812272" },
-    { accountName: "伽羅栖@ヤマピー3", rank: "815", gameId: "660320951451" },
+    { accountName: "トンちゃん@ゆりなガチャ禁", rank: "597", gameId: "87457461458", rankStatus: "updated" },
+    { accountName: "トンちゃん@ゆりな", rank: "710", gameId: "256947852", rankStatus: "updated" },
+    { accountName: "伽羅栖ʚ✞ɞヤマピー", rank: "2043", gameId: "910812272", rankStatus: "updated" },
+    { accountName: "伽羅栖@ヤマピー3", rank: "816", gameId: "660320951451", rankStatus: "updated" },
   ]},
   { lineName: "⋈フレドラ・クリア♡", note: "神殿:闇時2のみ\nランク差:気にしない\n垢:1垢でもOK\n番号:777のみ\n厳選キャラ:OK\nワンパンキャラなくても大丈夫\n【追記】ワンパンキャラ出します", accounts: [
-    { accountName: "NT・R18 メス〇キ", rank: "843", gameId: "503625563265" },
-    { accountName: "T・SF メス〇キママ", rank: "507", gameId: "599171176743" },
+    { accountName: "NT・R18 メス〇キ", rank: "885", gameId: "503625563265", rankStatus: "updated" },
+    { accountName: "T・SF メス〇キママ", rank: "569", gameId: "599171176743", rankStatus: "updated" },
   ]},
   { lineName: "ばっち", accounts: [
-    { accountName: "グラ", rank: "1848", gameId: "636501537" },
+    { accountName: "グラ", rank: "1911", gameId: "636501537", rankStatus: "updated" },
   ]},
   { lineName: "きむゆう", accounts: [
-    { accountName: "CIMAきむゆう", rank: "515", gameId: "452415097235" },
+    { accountName: "CIMAきむゆう", rank: "518", gameId: "452415097235", rankStatus: "updated" },
   ]},
   { lineName: "かなっぺ", accounts: [
-    { accountName: "かなっぺ初号機", rank: "627", gameId: "543134141774" },
+    { accountName: "かな@べる神獣", rank: "628", gameId: "543134141774", rankStatus: "updated" },
   ]},
   { lineName: "柳本 こうや", note: "神殿:なんでもOK\nランク差:100以上\n垢:1垢でもOK\n番号:番号無しでもOK\n厳選キャラ:OK\nワンパンキャラなくても大丈夫\n【追記】・ワンパン枠は闇時2で喜多ちゃん出せます\n・仕事の関係で平日は朝の10時頃か深夜1時頃に募集をすることが多いですが土日は基本いつでもできます。", accounts: [
-    { accountName: "やなサブ", rank: "702", gameId: "5968118760" },
-    { accountName: "やなサブ2", rank: "40", gameId: "487739571303" },
-    { accountName: "やな@絆感謝♪", rank: "886", gameId: "963721647794" },
+    { accountName: "やなサブ1", rank: "706", gameId: "5968118760", rankStatus: "updated" },
+    { accountName: "やなサブ2", rank: "88", gameId: "487739571303", rankStatus: "updated" },
+    { accountName: "やな", rank: "888", gameId: "963721647794", rankStatus: "updated" },
   ]},
   { lineName: "かずくん", accounts: [
-    { accountName: "かずくん[絆感謝]", rank: "1342", gameId: "605007106500" },
+    { accountName: "かずくん[絆感謝]", rank: "1363", gameId: "605007106500", rankStatus: "updated" },
   ]},
   { lineName: "の", note: "神殿:闇時2のみ\nランク差:325以上\n垢:1垢でもOK\n番号:777のみ\n厳選キャラ:NG\nワンパンキャラなくても大丈夫\n【追記】週4~5回貯めれる方\n時間帯午前から14時、その他不定期\n貯めきり条件合わない方フレンドお断りしてます。ランク1200以上の方のみお願いします", accounts: [
-    { accountName: "のサブ", rank: "603", gameId: "800663240812" },
-    { accountName: "の", rank: "655", gameId: "797220657225" },
+    { accountName: "のサブ", rank: "659", gameId: "800663240812", rankStatus: "updated" },
+    { accountName: "の", rank: "659", gameId: "797220657225", rankStatus: "updated" },
   ]},
   { lineName: "よしとみ", note: "神殿:なんでもOK\nランク差:325以上\n垢:1垢でもOK\n番号:番号無しでもOK\n厳選キャラ:OK\nワンパンキャラなくても大丈夫", accounts: [
-    { accountName: "久住⁰", rank: "2500", gameId: "551993492721" },
-    { accountName: "久住¹", rank: "783", gameId: "331090264115" },
+    { accountName: "久住⁰", rank: "2500", gameId: "551993492721", rankStatus: "updated" },
+    { accountName: "久住¹", rank: "784", gameId: "331090264115", rankStatus: "updated" },
   ]},
   { lineName: "ai(番号なし)", note: "神殿:闇時2のみ\nランク差:175以上\n垢:1垢でもOK\n番号:番号無しでもOK\n厳選キャラ:OK\nワンパンキャラなくても大丈夫", accounts: [
-    { accountName: "ゆこ@絆オーブは神", rank: "1248", gameId: "726912187193" },
-    { accountName: "みみっち@ゆこ2",   rank: "696",  gameId: "168498797684" },
-    { accountName: "まるっち@ゆこ3",   rank: "701",  gameId: "535920945416" },
+    { accountName: "*.ゆきんこ.*", rank: "1557", gameId: "726912187193", rankStatus: "updated" },
+    { accountName: "みみっち@ゆこ2", rank: "840", gameId: "168498797684", rankStatus: "updated" },
+    { accountName: "まるっち@ゆこ3", rank: "840", gameId: "535920945416", rankStatus: "updated" },
   ]},
   { lineName: "おき", accounts: [
-    { accountName: "しん", rank: "2500", gameId: "956426833888" },
-    { accountName: "しん", rank: "556",  gameId: "698292106584" },
-    { accountName: "しん", rank: "524",  gameId: "580787362213" },
+    { accountName: "しん", rank: "2500", gameId: "956426833888", rankStatus: "updated" },
+    { accountName: "しん", rank: "556", gameId: "698292106584", rankStatus: "updated" },
+    { accountName: "しんさぶ", rank: "530", gameId: "580787362213", rankStatus: "updated" },
   ]},
   { lineName: "暖", note: "神殿:なんでもOK\nランク差:325以上\n垢:1垢でもOK\n番号:番号無しでもOK\n厳選キャラ:OK\nワンパンキャラなくても大丈夫\n【追記】ランク325離れてる方お願い致します。", accounts: [
-    { accountName: "べてぃぼーい3☆⌐",     rank: "2167", gameId: "353327454589" },
-    { accountName: "べてぃぼーい3rd3☆⌐",  rank: "533",  gameId: "568875722954" },
-    { accountName: "べてぃぼーい2nd3☆⌐",  rank: "632",  gameId: "370768412026" },
+    { accountName: "べてぃ♣'3☆〜", rank: "2500", gameId: "353327454589", rankStatus: "updated" },
+    { accountName: "べてぃ♣''''3☆〜", rank: "535", gameId: "568875722954", rankStatus: "updated" },
+    { accountName: "べてぃ♣'''3☆〜", rank: "729", gameId: "370768412026", closed: true, rankStatus: "updated" },
+    { accountName: "べてぃ♣\"3☆〜", rank: "882", gameId: "149245135055", rankStatus: "updated" },
   ]},
   { lineName: "唯人", note: "神殿:なんでもOK\nランク差:325以上\n垢:1垢でもOK\n番号:番号無しでもOK\n厳選キャラ:OK\nワンパンキャラなくても大丈夫", accounts: [
-    { accountName: "ゆいぽん", rank: "2035", gameId: "487155252" },
+    { accountName: "ゆいぽん", rank: "2035", gameId: "487155252", rankStatus: "updated" },
   ]},
   { lineName: "はやと(hyt)", accounts: [
-    { accountName: "1st hyt", rank: "1426", gameId: "229543871633" },
-    { accountName: "2nd hyt", rank: "565",  gameId: "837202595851" },
-    { accountName: "3rd hyt", rank: "415",  gameId: "865349198241" },
-    { accountName: "4th hyt", rank: "495",  gameId: "87688703704" },
-  ]},
-  { lineName: "祐人", note: "神殿:なんでもOK\nランク差:325以上\n垢:1垢でもOK\n番号:番号無しでもOK\n厳選キャラ:OK\nワンパンキャラなくても大丈夫", accounts: [
-    { accountName: "MOL53",  rank: "1108", gameId: "526765556182" },
-    { accountName: "MOL53②", rank: "398",  gameId: "908489865835" },
-    { accountName: "MOL53③", rank: "64",   gameId: "317907783837" },
+    { accountName: "1st hyt", rank: "1433", gameId: "229543871633", rankStatus: "updated" },
+    { accountName: "2nd hyt", rank: "566", gameId: "837202595851", rankStatus: "updated" },
+    { accountName: "3rd hyt", rank: "415", gameId: "865349198241", rankStatus: "updated" },
+    { accountName: "4th hyt", rank: "495", gameId: "87688703704", rankStatus: "updated" },
   ]},
   { lineName: "焔", note: "神殿:なんでもOK\nランク差:325以上\n垢:1垢でもOK\n番号:番号無しでもOK\n厳選キャラ:OK\nワンパンキャラなくても大丈夫", accounts: [
-    { accountName: "焔",     rank: "2006", gameId: "248619456569" },
-    { accountName: "焔サブ1", rank: "1689", gameId: "907356852441" },
-    { accountName: "焔サブ2", rank: "344",  gameId: "407511331433" },
-    { accountName: "焔サブ3", rank: "315",  gameId: "567560201070" },
+    { accountName: "焔", rank: "2006", gameId: "248619456569", rankStatus: "updated" },
+    { accountName: "焔　sub1", rank: "1690", gameId: "907356852441", rankStatus: "updated" },
+    { accountName: "焔サブ2", rank: "355", gameId: "407511331433", rankStatus: "updated" },
+    { accountName: "焔サブ3", rank: "322", gameId: "567560201070", rankStatus: "updated" },
   ]},
   { lineName: "NAMIKI", note: "神殿:なんでもOK\nランク差:325以上\n垢:1垢でもOK\n番号:番号無しでもOK\n厳選キャラ:OK\nワンパンキャラなくても大丈夫", accounts: [
-    { accountName: "NAMU .:゜)", rank: "1788", gameId: "94789450454" },
+    { accountName: "NAMU .:゜)", rank: "1900", gameId: "94789450454", rankStatus: "updated" },
   ]},
   { lineName: "ようへい", note: "神殿:なんでもOK\nランク差:325以上\n垢:1垢でもOK\n番号:番号無しでもOK\n厳選キャラ:OK\nワンパンキャラなくても大丈夫", accounts: [
-    { accountName: "YOUHEI", rank: "1659", gameId: "940200717" },
+    { accountName: "YOUHEI", rank: "1660", gameId: "940200717", rankStatus: "updated" },
   ]},
   { lineName: "渡辺", note: "神殿:なんでもOK\nランク差:325以上\n垢:1垢でもOK\n番号:番号無しでもOK\n厳選キャラ:OK\nワンパンキャラなくても大丈夫", accounts: [
-    { accountName: "、", rank: "2500", gameId: "50541605312" },
+    { accountName: "、", rank: "2500", gameId: "50541605312", rankStatus: "updated" },
   ]},
   { lineName: "こうすけ", note: "神殿:なんでもOK\nランク差:気にしない\n垢:1垢でもOK\n番号:番号無しでもOK\n厳選キャラ:OK\nワンパンキャラなくても大丈夫", accounts: [
-    { accountName: "まえすけ③ @星詠み☆", rank: "1988", gameId: "977778319861" },
+    { accountName: "まえすけ③ @星詠み☆", rank: "2000", gameId: "977778319861", rankStatus: "updated" },
   ]},
   { lineName: "まこと", accounts: [
-    { accountName: "特攻隊長黒", rank: "1393", gameId: "722976073114" },
+    { accountName: "特攻隊長黒", rank: "1402", gameId: "722976073114", rankStatus: "updated" },
   ]},
   { lineName: "さやか", note: "神殿:なんでもOK\nランク差:325以上\n垢:複数垢のみ\n番号:777のみ\n厳選キャラ:OK\nワンパンキャラのみ", accounts: [
-    { accountName: "コマみちゃん", rank: "1893", gameId: "412896132" },
-    { accountName: "コマさん",     rank: "2324", gameId: "603643580332" },
+    { accountName: "コマみちゃん", rank: "1905", gameId: "412896132", rankStatus: "updated" },
+    { accountName: "コマさん", rank: "2325", gameId: "603643580332", rankStatus: "updated" },
   ]},
 ];
 /* ============================================================ */
@@ -716,6 +724,13 @@ resultsEl.innerHTML = list.map((person, pi) => {
                 ${a.closed
                   ? `<div class="closed-badge">募集締切</div>`
                   : `<div class="tap-hint">タップしてID表示</div>`}
+                ${a.rankStatus === 'updated'
+                  ? `<div class="status-badge updated">ランク更新済み</div>`
+                  : a.rankStatus === 'unknown'
+                    ? `<div class="status-badge unknown">未確認(スクショなし)</div>`
+                    : a.rankStatus === 'unsure'
+                      ? `<div class="status-badge unsure">未確定</div>`
+                      : ''}
               </div>
               <div class="rank-badge"><span class="rlabel">RANK</span><span class="rnum">${escapeHtml(a.rank)}</span></div>
             </div>
@@ -814,10 +829,10 @@ filterBodyWrap.classList.toggle('open', filterEnabled);
 
 hudCount.textContent = `${MEMBERS.length}人登録`;
 
-// ==== 更新通知バナー(今回変更のあった人をここに書く) ====
-const updatedNames = ["さやか", "ai"];
-document.getElementById('updateNames').textContent = updatedNames.join('、');
-if (updatedNames.length === 0) {
+// ==== 更新通知バナー(今回のお知らせ文をここに書く) ====
+const updateMessage = "暖さんに新しい垢が1つ追加されました。また、ランク更新を一通り終えましたが、認識違いがあるかもしれません。おかしい箇所があれば教えてください。";
+document.getElementById('updateText').textContent = updateMessage;
+if (!updateMessage) {
   document.getElementById('updateBanner').style.display = 'none';
 }
 
