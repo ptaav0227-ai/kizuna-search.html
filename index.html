@@ -114,6 +114,27 @@
     background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
     overflow:hidden;
   }
+  .withdrawn-item{
+    padding:12px 14px;border-bottom:1px solid var(--line-soft);
+  }
+  .withdrawn-item:last-child{border-bottom:none;}
+  .withdrawn-name{
+    display:inline-flex;align-items:center;gap:6px;
+    font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;
+  }
+  .withdrawn-name::before{content:"退会";
+    font-size:10px;font-weight:700;color:#e2574c;
+    background:rgba(226,87,76,.12);border-radius:999px;padding:2px 8px;
+  }
+  .withdrawn-acct{
+    display:flex;flex-wrap:wrap;align-items:center;gap:8px;
+    font-size:12px;color:var(--muted);padding:4px 0 4px 4px;
+    font-family:'JetBrains Mono',monospace;
+  }
+  .withdrawn-acct-name{color:var(--text);font-family:inherit;min-width:110px;}
+  .withdrawn-acct-rank{color:var(--accent,#ff7d1f);}
+  .withdrawn-acct-id{color:var(--muted);}
+  .withdrawn-empty{padding:14px;font-size:12px;color:var(--muted);text-align:center;}
   table.ranks{width:100%;border-collapse:collapse;}
   table.ranks th{
     text-align:left;font-size:10px;color:var(--muted);font-weight:700;
@@ -422,6 +443,11 @@
       </div></div>
     </div>
 
+    <div class="section-label">退会者情報</div>
+    <div class="table-card">
+      <div id="withdrawnWrap"></div>
+    </div>
+
     <div class="section-label">ランク一覧</div>
     <div class="table-card">
       <div id="tableWrap"></div>
@@ -438,8 +464,10 @@
 <script>
 /* ============ データはここを書き換えて差し替え ============ */
 const MEMBERS = [
-  { lineName: "こうき", note: "神殿:闇時2のみ\nランク差:気にしない\n垢:1垢でもOK\n番号:777のみ\n厳選キャラ:NG\nワンパンキャラのみ", accounts: [
-    { accountName: "あまのる", rank: "1155", gameId: "191897846", rankStatus: "updated" },
+  { lineName: "くどまさ", note: "神殿:なんでもOK\nランク差:175以上\n垢:1垢でもOK\n番号:番号無しでもOK\n厳選キャラ:OK\nワンパンキャラのみ\n【追記】光神殿でルシファーワンパンが好きですが、闇時でも大丈夫です\n3垢なので、1垢の方は3垢\n2神殿（サヴサヴは溜まりきらなくても）2垢の方は2垢ずつで2神殿だと助かります", accounts: [
+    { accountName: "くどぽん(*´*)", rank: "2099", gameId: "787329974", rankStatus: "updated" },
+    { accountName: "くどぱん(*´ω`*)", rank: "2099", gameId: "902520144026", rankStatus: "updated" },
+    { accountName: "サヴ(;´Д`)", rank: "717", gameId: "333561807", rankStatus: "updated" },
   ]},
   { lineName: "藤岡", note: "神殿:なんでもOK\nランク差:175以上\n垢:1垢でもOK\n番号:番号無しでもOK\n厳選キャラ:NG\nワンパンキャラのみ", accounts: [
     { accountName: "私はルリ", rank: "2500", gameId: "131291013582", rankStatus: "updated" },
@@ -838,6 +866,36 @@ document.getElementById('updateText').textContent = updateMessage;
 if (!updateMessage) {
   document.getElementById('updateBanner').style.display = 'none';
 }
+
+// ==== 退会者情報 ====
+const WITHDRAWN = [
+  { lineName: "こうき", accounts: [
+    { accountName: "あまのる", rank: "1155", gameId: "191897846" },
+  ]},
+  { lineName: "祐人", accounts: [
+    { accountName: "MOL53", rank: "1108", gameId: "526765556182" },
+    { accountName: "MOL53②", rank: "398", gameId: "908489865835" },
+    { accountName: "MOL53③", rank: "64", gameId: "317907783837" },
+  ]},
+];
+(function renderWithdrawn(){
+  const wrap = document.getElementById('withdrawnWrap');
+  if (!wrap) return;
+  if (WITHDRAWN.length === 0) {
+    wrap.innerHTML = '<div class="withdrawn-empty">現在、退会者はいません</div>';
+    return;
+  }
+  wrap.innerHTML = WITHDRAWN.map(m => {
+    const accts = m.accounts.map(a =>
+      '<div class="withdrawn-acct">' +
+        '<span class="withdrawn-acct-name">' + escapeHtml(a.accountName) + '</span>' +
+        '<span class="withdrawn-acct-rank">Rank ' + escapeHtml(a.rank) + '</span>' +
+        '<span class="withdrawn-acct-id">ID:' + escapeHtml(a.gameId) + '</span>' +
+      '</div>'
+    ).join('');
+    return '<div class="withdrawn-item"><div class="withdrawn-name">' + escapeHtml(m.lineName) + '</div>' + accts + '</div>';
+  }).join('');
+})();
 
 render();
 </script>
