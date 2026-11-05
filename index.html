@@ -589,10 +589,6 @@ const MEMBERS = [
     { accountName: "でっぷさん2nd➌", rank: "683", gameId: "698461944617", rankStatus: "updated" },
     { accountName: "でっぷさん3rd➌", rank: "495", gameId: "264403645106", rankStatus: "updated" },
   ]},
-  { lineName: "kaori", note: "神殿:なんでもOK\nランク差:気にしない\n垢:1垢でもOK\n番号:番号無しでもOK\n厳選キャラ:OK\nワンパンキャラなくても大丈夫", accounts: [
-    { accountName: "星空凛　はこみっつ", rank: "652", gameId: "929031079289", rankStatus: "updated" },
-    { accountName: "μ'sicforever", rank: "278", gameId: "939757132862", rankStatus: "updated" },
-  ]},
   { lineName: "なるせ", note: "神殿:なんでもOK\nランク差:気にしない\n垢:複数垢のみ\n番号:番号無しでもOK\n厳選キャラ:NG\nワンパンキャラのみ", accounts: [
     { accountName: "1", rank: "2000", gameId: "089726810", rankStatus: "updated" },
     { accountName: "2", rank: "823", gameId: "556758655404", rankStatus: "updated" },
@@ -914,6 +910,10 @@ if (!updateMessage) {
 
 // ==== 退会者情報 ====
 const WITHDRAWN = [
+  { lineName: "kaori", accounts: [
+    { accountName: "星空凛　はこみっつ", rank: "652", gameId: "929031079289" },
+    { accountName: "μ'sicforever", rank: "278", gameId: "939757132862" },
+  ]},
 ];
 (function renderWithdrawn(){
   const wrap = document.getElementById('withdrawnWrap');
