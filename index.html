@@ -593,9 +593,6 @@ const MEMBERS = [
     { accountName: "へい", rank: "837", gameId: "292637589668", rankStatus: "updated" },
     { accountName: "Android", rank: "581", gameId: "410862650239", rankStatus: "updated" },
   ]},
-  { lineName: "kuga", note: "神殿:なんでもOK\nランク差:気にしない\n垢:1垢でもOK\n番号:番号無しでもOK\n厳選キャラ:OK\nワンパンキャラのみ", accounts: [
-    { accountName: "kuga", rank: "1354", gameId: "197953774290", rankStatus: "updated" },
-  ]},
   { lineName: "ゆーだい", note: "神殿:闇時2のみ\nランク差:気にしない\n垢:1垢でもOK\n番号:番号無しでもOK\n厳選キャラ:OK\nワンパンキャラのみ", accounts: [
     { accountName: "ゆーだい①", rank: "1657", gameId: "685740970", rankStatus: "updated" },
     { accountName: "ゆーだい②", rank: "1312", gameId: "832785185", rankStatus: "updated" },
@@ -899,6 +896,9 @@ if (!updateMessage) {
 
 // ==== 退会者情報 ====
 const WITHDRAWN = [
+  { lineName: "kuga", accounts: [
+    { accountName: "kuga", rank: "1354", gameId: "197953774290" },
+  ]},
 ];
 (function renderWithdrawn(){
   const wrap = document.getElementById('withdrawnWrap');
